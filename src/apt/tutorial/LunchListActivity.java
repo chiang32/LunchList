@@ -8,6 +8,7 @@ public class LunchListActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // yes it is.
         setContentView(R.layout.main);
     }
 }
