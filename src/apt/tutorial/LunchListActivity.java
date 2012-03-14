@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
+import android.app.TabActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TabHost;
 import android.widget.TextView;
 
-public class LunchListActivity extends Activity {
+public class LunchListActivity extends TabActivity {
 	List<Restaurant> model = new ArrayList<Restaurant>();
 	RestaurantAdapter adapter = null;
 
@@ -40,12 +41,22 @@ public class LunchListActivity extends Activity {
 
 		list.setAdapter(adapter);
 
-		Restaurant r3 = new Restaurant();
-		r3.setAddress("aaaa3");
-		r3.setName("name3");
-		r3.setType("sit_down");
-		adapter.add(r3);
 
+
+		TabHost.TabSpec spec = getTabHost().newTabSpec("tag1");
+
+		spec.setContent(R.id.restaurants);
+		spec.setIndicator("List", getResources().getDrawable(R.drawable.list));
+
+		getTabHost().addTab(spec);
+
+		spec = getTabHost().newTabSpec("tag2");
+		spec.setContent(R.id.details);
+		spec.setIndicator("Details",
+				getResources().getDrawable(R.drawable.restaurant));
+
+		getTabHost().addTab(spec);
+		getTabHost().setCurrentTab(0);
 	}
 
 	private View.OnClickListener onSave = new View.OnClickListener() {
@@ -116,6 +127,14 @@ public class LunchListActivity extends Activity {
 			RestaurantHolder holder = null;
 
 			if (row == null) {
+
+				// Context mContext = LunchListActivity.this;
+				appendLog(LAYOUT_INFLATER_SERVICE);
+				// 下面俩种方法都可以
+				// //LayoutInflater inflater = getLayoutInflater();
+				// LayoutInflater inflater = (LayoutInflater)
+				// mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+
 				LayoutInflater inflater = getLayoutInflater();
 
 				row = inflater.inflate(R.layout.row, parent, false);
