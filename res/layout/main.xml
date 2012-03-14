@@ -1,12 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
-    <TextView
+    <TableLayout
+        android:id="@+id/details"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:layout_alignParentBottom="true"
+        android:stretchColumns="1" >
 
-</LinearLayout>
+        <TableRow>
+            <TextView android:text="Name:" />
+            <EditText android:id="@+id/name" />
+        </TableRow>
+
+        <TableRow>
+            <TextView android:text="Address:" />
+            <EditText android:id="@+id/addr" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView android:text="Type:" />
+
+            <RadioGroup android:id="@+id/types" >
+
+                <RadioButton
+                    android:id="@+id/take_out"
+                    android:text="Take-Out" />
+
+                <RadioButton
+                    android:id="@+id/sit_down"
+                    android:text="Sit-Down" />
+
+                <RadioButton
+                    android:id="@+id/delivery"
+                    android:text="Delivery" />
+            </RadioGroup>
+        </TableRow>
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+    </TableLayout>
+
+    <ListView
+        android:id="@+id/restaurants"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/details"
+        android:layout_alignParentTop="true" />
+
+</RelativeLayout>

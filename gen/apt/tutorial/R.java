@@ -13,6 +13,17 @@ public final class R {
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
     }
+    public static final class id {
+        public static final int addr=0x7f050002;
+        public static final int delivery=0x7f050006;
+        public static final int details=0x7f050000;
+        public static final int name=0x7f050001;
+        public static final int restaurants=0x7f050008;
+        public static final int save=0x7f050007;
+        public static final int sit_down=0x7f050005;
+        public static final int take_out=0x7f050004;
+        public static final int types=0x7f050003;
+    }
     public static final class layout {
         public static final int main=0x7f030000;
     }
