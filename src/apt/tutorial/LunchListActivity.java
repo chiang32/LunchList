@@ -17,10 +17,11 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 
 public class LunchListActivity extends Activity {
-	List<Restaurant> model=new ArrayList<Restaurant>();
-	ArrayAdapter<Restaurant> adapter=null;
+	List<Restaurant> model = new ArrayList<Restaurant>();
+	RestaurantAdapter adapter = null;
 
-	
+//	ArrayAdapter<Restaurant> adapter = null;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -29,48 +30,30 @@ public class LunchListActivity extends Activity {
 
 		Button save = (Button) findViewById(R.id.save);
 		save.setOnClickListener(onSave);
-		
-	  
-	    
-		ListView list = (ListView)findViewById(R.id.restaurants);
-		adapter = new ArrayAdapter<Restaurant>(this, android.R.layout.simple_list_item_1, model);
-		//adapter = new ArrayAdapter<Restaurant>(this, android.R.layout.restaurants, model);
-			
-	    list.setAdapter(adapter);
 
-	    Restaurant r3 = new Restaurant();
-	    r3.setAddress("aaaa3");
-	    r3.setName( "name3");
-	    r3.setType("sit_down");
-	    adapter.add( r3);
-//	    
-//	    Restaurant r1 = new Restaurant();
-//	    r1.setAddress("aaaa");
-//	    r1.setName( "name1");
-//	    r1.setType("sit_down");
-//	    adapter.add( r1);
-//
-//	    Restaurant r2 = new Restaurant();
-//	    r2.setAddress("aaaa2");
-//	    r2.setName( "name2");
-//	    r2.setType("sit_down");
-//	    adapter.add(r2);
+		ListView list = (ListView) findViewById(R.id.restaurants);
+		adapter = new RestaurantAdapter();
 
-	    
-	  
-	   
+		list.setAdapter(adapter);
+
+		Restaurant r3 = new Restaurant();
+		r3.setAddress("aaaa3");
+		r3.setName("name3");
+		r3.setType("sit_down");
+		adapter.add(r3);
+
 	}
 
 	private View.OnClickListener onSave = new View.OnClickListener() {
 		public void onClick(View v) {
 			Restaurant r = new Restaurant();
-			
+
 			EditText name = (EditText) findViewById(R.id.name);
 			EditText address = (EditText) findViewById(R.id.addr);
 
 			r.setName(name.getText().toString());
 			r.setAddress(address.getText().toString());
-			
+
 			RadioGroup types = (RadioGroup) findViewById(R.id.types);
 
 			switch (types.getCheckedRadioButtonId()) {
@@ -84,46 +67,44 @@ public class LunchListActivity extends Activity {
 				r.setType("delivery");
 				break;
 			}
-//			adapter.add(r);
-		adapter.add(r);
-			  appendLog( "counts are "+ adapter.getCount() );
+			adapter.add(r);
+			appendLog("counts are " + adapter.getCount());
 		}
 
 	};
-	
+
 	/**
 	 * @description write logs
 	 * @param text
 	 */
-	public void appendLog(String text)
-	{ 
-       String path = "/mnt/sdcard/jarod.log";
-	   File logFile = new File(path);
-	   if (!logFile.exists())
-	   {
-	      try
-	      {
-	         logFile.createNewFile();
-	      } 
-	      catch (IOException e)
-	      {
-	         // TODO Auto-generated catch block
-	         e.printStackTrace();
-	      }
-	   }
-	   try
-	   {
-	      //BufferedWriter for performance, true to set append to file flag
-	      BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true)); 
-	      buf.append(text);
-	      buf.newLine();
-	      buf.close();
-	   }
-	   catch (IOException e)
-	   {
-	      // TODO Auto-generated catch block
-	      e.printStackTrace();
-	   }
+	public void appendLog(String text) {
+		String path = "/mnt/sdcard/jarod.log";
+		File logFile = new File(path);
+		if (!logFile.exists()) {
+			try {
+				logFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			// BufferedWriter for performance, true to set append to file flag
+			BufferedWriter buf = new BufferedWriter(new FileWriter(logFile,
+					true));
+			buf.append(text);
+			buf.newLine();
+			buf.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	class RestaurantAdapter extends ArrayAdapter<Restaurant> {
+		RestaurantAdapter() {
+			super(LunchListActivity.this, android.R.layout.simple_list_item_1, model);
+		}
 	}
 
 }
