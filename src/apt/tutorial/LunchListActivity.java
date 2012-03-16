@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,9 +22,16 @@ import android.widget.RadioGroup;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+/**
+ * @author Jarod Chiang
+ * 
+ */
 public class LunchListActivity extends TabActivity {
 	List<Restaurant> model = new ArrayList<Restaurant>();
 	RestaurantAdapter adapter = null;
+	EditText name=null;
+	EditText address=null;
+	RadioGroup types=null;
 
 	// ArrayAdapter<Restaurant> adapter = null;
 
@@ -33,6 +41,12 @@ public class LunchListActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		
+		name=(EditText)findViewById(R.id.name);
+		address=(EditText)findViewById(R.id.addr);
+		types=(RadioGroup)findViewById(R.id.types);
+
+		
 		Button save = (Button) findViewById(R.id.save);
 		save.setOnClickListener(onSave);
 
@@ -40,8 +54,6 @@ public class LunchListActivity extends TabActivity {
 		adapter = new RestaurantAdapter();
 
 		list.setAdapter(adapter);
-
-
 
 		TabHost.TabSpec spec = getTabHost().newTabSpec("tag1");
 
@@ -57,6 +69,9 @@ public class LunchListActivity extends TabActivity {
 
 		getTabHost().addTab(spec);
 		getTabHost().setCurrentTab(0);
+
+		list.setOnItemClickListener(onListClick);
+
 	}
 
 	private View.OnClickListener onSave = new View.OnClickListener() {
@@ -151,6 +166,7 @@ public class LunchListActivity extends TabActivity {
 	}
 
 	static class RestaurantHolder {
+
 		private TextView name = null;
 		private TextView address = null;
 		private ImageView icon = null;
@@ -173,4 +189,22 @@ public class LunchListActivity extends TabActivity {
 			}
 		}
 	}
+
+	private AdapterView.OnItemClickListener onListClick = new AdapterView.OnItemClickListener() {
+		public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+			Restaurant r = model.get(position);
+			name.setText(r.getName());
+			address.setText(r.getAddress());
+
+			if (r.getType().equals("sit_down")) {
+				types.check(R.id.sit_down);
+			} else if (r.getType().equals("take_out")) {
+				types.check(R.id.take_out);
+			} else {
+				types.check(R.id.delivery);
+			}
+			getTabHost().setCurrentTab(1);
+		}
+
+	};
 }
