@@ -4,11 +4,16 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import android.R;
 import android.app.TabActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +34,10 @@ import android.widget.TextView;
 public class LunchListActivity extends TabActivity {
 	List<Restaurant> model = new ArrayList<Restaurant>();
 	RestaurantAdapter adapter = null;
-	EditText name=null;
-	EditText address=null;
-	RadioGroup types=null;
+	EditText name = null;
+	EditText address = null;
+	RadioGroup types = null;
+	  private static final String LOG_KEY = "TEST";
 
 	// ArrayAdapter<Restaurant> adapter = null;
 
@@ -41,12 +47,10 @@ public class LunchListActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		
-		name=(EditText)findViewById(R.id.name);
-		address=(EditText)findViewById(R.id.addr);
-		types=(RadioGroup)findViewById(R.id.types);
+		name = (EditText) findViewById(R.id.name);
+		address = (EditText) findViewById(R.id.addr);
+		types = (RadioGroup) findViewById(R.id.types);
 
-		
 		Button save = (Button) findViewById(R.id.save);
 		save.setOnClickListener(onSave);
 
@@ -71,6 +75,18 @@ public class LunchListActivity extends TabActivity {
 		getTabHost().setCurrentTab(0);
 
 		list.setOnItemClickListener(onListClick);
+		getTabHost().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				appendLog("OnClick");
+				  Log.d(LOG_KEY, "OnClick");
+				//Toast.makeText(this, "message", Toast.LENGTH_LONG).show();
+
+//				if (getTabHost().getCurrentTabTag().equals( myTabTag )) {
+					//getTabHost().setCurrentTab(myTabIndex);
+//				}
+			}
+		});
 
 	}
 
@@ -102,7 +118,11 @@ public class LunchListActivity extends TabActivity {
 		}
 
 	};
-
+	private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 	/**
 	 * @description write logs
 	 * @param text
@@ -122,7 +142,8 @@ public class LunchListActivity extends TabActivity {
 			// BufferedWriter for performance, true to set append to file flag
 			BufferedWriter buf = new BufferedWriter(new FileWriter(logFile,
 					true));
-			buf.append(text);
+
+			buf.append(getDateTime() +"\n"+text);
 			buf.newLine();
 			buf.close();
 		} catch (IOException e) {
@@ -191,7 +212,8 @@ public class LunchListActivity extends TabActivity {
 	}
 
 	private AdapterView.OnItemClickListener onListClick = new AdapterView.OnItemClickListener() {
-		public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
 			Restaurant r = model.get(position);
 			name.setText(r.getName());
 			address.setText(r.getAddress());

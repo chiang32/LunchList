@@ -1,18 +1,28 @@
 package apt.tutorial;
 
-
 public class Restaurant {
 	private String name = "";
 	private String address = "";
 	private String type = "";
-	Restaurant(){
-		
+	private String notes = "";
+
+	Restaurant() {
+
 	}
-	Restaurant( String aName, String aAddress, String aType) {
+
+	Restaurant(String aName, String aAddress, String aType) {
 		name = aName;
 		address = aAddress;
 		type = aType;
 
+	}
+
+	public String getNotes() {
+		return (notes);
+	}
+
+	public void setNotes( String notes){
+		this.notes = notes;
 	}
 
 	public String getType() {
