@@ -75,18 +75,6 @@
                         </RadioGroup>
                     </TableRow>
 
-                    <TableRow>
-
-                        <TextView android:text="Notes:" />
-
-                        <EditText
-                            android:id="@+id/notes"
-                            android:gravity="top"
-                            android:inputType="textMultiLine"
-                            android:lines="2"
-                            android:maxLines="2"
-                            android:scrollHorizontally="false" />
-                    </TableRow>
 
                     <Button
                         android:id="@+id/save"
