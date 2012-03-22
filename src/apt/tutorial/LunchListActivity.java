@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.TabActivity;
 import android.os.Bundle;
@@ -44,23 +45,30 @@ public class LunchListActivity extends TabActivity {
 	EditText notes = null;
 	RadioGroup types = null;
 	Restaurant current = null;
-	int progress=0;
+	int progress = 0;
 	private static final String LOG_KEY = "TEST";
-	
+	AtomicBoolean isActive = new AtomicBoolean(true);
+
 	private Runnable longTask = new Runnable() {
+
 		public void run() {
-			for (int i = 0; i < 20; i++) {
-				doSomeLongWork(50);
+			for (int i = progress; i < 10000 && isActive.get(); i += 200) {
+				doSomeLongWork(200);
 			}
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					setProgressBarVisibility(false);					
-				}
-			});
+			if( isActive.get() ){
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						setProgressBarVisibility(false);
+						progress = 0;
+					}
+				});				
+			}
+
 		}
 	};
+
+	
 
 	// ArrayAdapter<Restaurant> adapter = null;
 
@@ -115,7 +123,25 @@ public class LunchListActivity extends TabActivity {
 		});
 
 	}
+	@Override
+	public void onPause() {
+		super.onPause();
+		isActive.set(false);
+	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		isActive.set(true);
+		if (progress > 0) {
+			startWork();
+		}
+	}
+
+	private void startWork() {
+		setProgressBarVisibility(true);
+		new Thread(longTask).start();
+	}
 	private void doSomeLongWork(final int incr) {
 		runOnUiThread(new Runnable() {
 			@Override
@@ -137,19 +163,17 @@ public class LunchListActivity extends TabActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		if (item.getItemId() == R.id.toast) {
+			
 			String message = "No restaurant selected";
 			if (current != null) {
 				message = current.getNotes();
 			}
 			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 			return (true);
+			
 		} else if (item.getItemId() == R.id.run) {
-			Toast.makeText(this, "start...", Toast.LENGTH_LONG).show();
-			setProgressBarVisibility(true);
-			progress=0;
-
-			new Thread(longTask).start();
-			Toast.makeText(this, "completed...", Toast.LENGTH_LONG).show();
+			startWork();
+//			Toast.makeText(this, "completed...", Toast.LENGTH_LONG).show();
 			return (true);
 		}
 
