@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.spec.KeySpec;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,16 +12,17 @@ import java.util.Date;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,6 +43,19 @@ public class LunchList extends ListActivity {
 	RadioGroup types = null;
 
 	RestaurantHelper helper = null;
+	SharedPreferences prefs;
+	private SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences arg0,
+				String arg1) {
+			// TODO Auto-generated method stub
+			if (arg1.equals("sort_order")) {
+initList();
+			}
+
+		}
+	};
 	public final static String ID_EXTRA = "apt.tutorial._ID";
 
 	private static final String LOG_KEY = "TEST";
@@ -52,46 +67,22 @@ public class LunchList extends ListActivity {
 		setContentView(R.layout.main);
 		helper = new RestaurantHelper(this);
 
-//		name = (EditText) findViewById(R.id.name);
-/*		address = (EditText) findViewById(R.id.addr);
-		types = (RadioGroup) findViewById(R.id.types);
-		notes = (EditText) findViewById(R.id.notes);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		initList();
 
-		Button save = (Button) findViewById(R.id.save);
-		
+		prefs.registerOnSharedPreferenceChangeListener(prefListener);
 
-		ListView list = (ListView) findViewById(R.id.list);
-*/
-		model = helper.getAll();
+	}
+
+	private void initList() {
+		if (model != null) {
+			stopManagingCursor(model);
+			model.close();
+		}
+		model = helper.getAll(prefs.getString("sort_order", "name"));
 		startManagingCursor(model);
 		adapter = new RestaurantAdapter(model);
 		setListAdapter(adapter);
-	//	list.setAdapter(adapter);
-		//
-		// TabHost.TabSpec spec = getTabHost().newTabSpec("tag1");
-		//
-		// spec.setContent(R.id.restaurants);
-		// spec.setIndicator("List",
-		// getResources().getDrawable(R.drawable.list));
-		//
-		// getTabHost().addTab(spec);
-		//
-		// spec = getTabHost().newTabSpec("tag2");
-		// spec.setContent(R.id.details);
-		// spec.setIndicator("Details",
-		// getResources().getDrawable(R.drawable.restaurant));
-		//
-		// getTabHost().addTab(spec);
-		// getTabHost().setCurrentTab(0);
-		//
-		// list.setOnItemClickListener(onListClick);
-		// getTabHost().setOnClickListener(new View.OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// appendLog("OnClick");
-		// Log.d(LOG_KEY, "OnClick");
-		// }
-		// });
 
 	}
 
@@ -101,27 +92,14 @@ public class LunchList extends ListActivity {
 		helper.close();
 	}
 
-    @Override
+	@Override
 	public void onListItemClick(ListView list, View view, int position, long id) {
-			Intent i = new Intent(LunchList.this, DetailForm.class);
 
-			i.putExtra(ID_EXTRA, String.valueOf(id));
-			startActivity(i);
+		Intent i = new Intent(LunchList.this, DetailForm.class);
 
-			// model.moveToPosition(position);
-			// name.setText(helper.getName(model));
-			// address.setText(helper.getAddress(model));
-			// notes.setText(helper.getNotes(model));
-			//
-			// if (helper.getType(model).equals("sit_down")) {
-			// types.check(R.id.sit_down);
-			// } else if (helper.getType(model).equals("take_out")) {
-			// types.check(R.id.take_out);
-			// } else {
-			// types.check(R.id.delivery);
-			// }
-			//
-			// getTabHost().setCurrentTab(1);
+		i.putExtra(ID_EXTRA, String.valueOf(id));
+		startActivity(i);
+
 	};
 
 	class RestaurantAdapter extends CursorAdapter {
@@ -223,7 +201,6 @@ public class LunchList extends ListActivity {
 		}
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		new MenuInflater(this).inflate(R.menu.option, menu);
@@ -234,8 +211,14 @@ public class LunchList extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.add) {
 			startActivity(new Intent(LunchList.this, DetailForm.class));
-		
-		return (true);
+
+			return (true);
+
+		} else if (item.getItemId() == R.id.prefs) {
+			startActivity(new Intent(this, EditPreferences.class));
+
+			return (true);
+
 		}
 		return (super.onOptionsItemSelected(item));
 	}
