@@ -4,6 +4,8 @@
         android:id="@+id/prefs"
         android:icon="@drawable/ic_menu_preferences"
         android:title="Settings"/>
+
+    
     <item
         android:id="@+id/add"
         android:icon="@drawable/ic_menu_add"
