@@ -30,7 +30,9 @@ public class DetailForm extends Activity {
 	String restaurantId = null;
 	LocationManager locMgr = null; // the system service that is our gateway to
 									// location information
-    
+	double latitude=0.0d; // not that elegant? a hassle
+	double longitude=0.0d;
+
 	@Override
 	protected void onPause() {
 		save();
@@ -144,6 +146,7 @@ Log.e(this.getClass().getName(), "msg");
 		// TODO Auto-generated method stub
 		if (restaurantId == null) {
 			menu.findItem(R.id.location).setEnabled(false);
+			menu.findItem(R.id.map).setEnabled(false);
 		}
 
 		return super.onPrepareOptionsMenu(menu);
@@ -170,9 +173,15 @@ Log.e(this.getClass().getName(), "msg");
 			
 			Log.e(this.getClass().getName(), "line 169.");
 			locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, onLocationChange);
-
 			return (true);
+		} else if (item.getItemId() == R.id.map) {
+			Intent i = new Intent(this, RestaurantMap.class);
+			i.putExtra(RestaurantMap.EXTRA_LATITUDE, latitude);
+			i.putExtra(RestaurantMap.EXTRA_LONGITUDE, longitude);
+			i.putExtra(RestaurantMap.EXTRA_NAME, name.getText().toString());
 
+			startActivity(i);
+			return (true);
 		}
 
 		return (super.onOptionsItemSelected(item));
@@ -215,8 +224,6 @@ Log.e(this.getClass().getName(), "msg");
 		address.setText(helper.getAddress(c));
 		notes.setText(helper.getNotes(c));
 		feed.setText(helper.getFeed(c));
-		location.setText(String.valueOf(helper.getLatitude(c)) + ", "
-				+ String.valueOf(helper.getLongitude(c)));
 
 		if (helper.getType(c).equals("sit_down")) {
 			types.check(R.id.sit_down);
@@ -225,6 +232,12 @@ Log.e(this.getClass().getName(), "msg");
 		} else {
 			types.check(R.id.delivery);
 		}
+
+		latitude=helper.getLatitude(c); // cache the loc arg in class memebers.
+		longitude=helper.getLongitude(c);
+
+		location.setText(String.valueOf(latitude) + ", "
+				+ String.valueOf(longitude));
 
 		c.close();
 	}
