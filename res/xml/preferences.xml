@@ -1,10 +1,23 @@
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
-  <ListPreference
-    android:key="sort_order"
-    android:title="Sort Order"
-    android:summary="Choose the order the list uses"
-    android:entries="@array/sort_names"
-    android:entryValues="@array/sort_clauses"
-    android:dialogTitle="Choose a sort order" />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListPreference
+        android:dialogTitle="Choose a sort order"
+        android:entries="@array/sort_names"
+        android:entryValues="@array/sort_clauses"
+        android:key="sort_order"
+        android:summary="Choose the order the list uses"
+        android:title="Sort Order" />
+
+    <CheckBoxPreference
+        android:key="alarm"
+        android:summary="Check if you want to know when it is time for lunch"
+        android:title="Sound a Lunch Alarm" />
+
+    <apt.tutorial.TimePreference
+        android:defaultValue="12:00"
+        android:dependency="alarm"
+        android:key="alarm_time"
+        android:summary="Set your desired time for the lunch alarm"
+        android:title="Lunch Alarm Time" />
+
 </PreferenceScreen>
