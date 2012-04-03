@@ -46,9 +46,7 @@ public class LunchList extends ListActivity {
 	SharedPreferences prefs;
 	private SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences arg0,
-				String arg1) {
+		public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
 			// TODO Auto-generated method stub
 			if (arg1.equals("sort_order")) {
 initList();

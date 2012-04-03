@@ -44,6 +44,7 @@ public class FeedActivity extends ListActivity {
 			}
 		}
 	}
+	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		// TODO Auto-generated method stub
