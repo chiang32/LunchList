@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class OnBootReceiver extends BroadcastReceiver {
 
@@ -21,9 +22,10 @@ public class OnBootReceiver extends BroadcastReceiver {
 				.getDefaultSharedPreferences(arg0);
 		
 		String time = prefs.getString("alarm_time", "16:15");
-
+		Log.e("OnBootReceiver-setAlarm", "H:"+TimePreference.getHour(time));
+		Log.e("OnBootReceiver-setAlarm", "M:"+TimePreference.getHour(time));
 		cal.set(Calendar.HOUR_OF_DAY, TimePreference.getHour(time));
-		cal.set(Calendar.MINUTE, TimePreference.getHour(time));
+		cal.set(Calendar.MINUTE, TimePreference.getMinute(time));
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		if (cal.getTimeInMillis() < System.currentTimeMillis()) {
@@ -40,8 +42,8 @@ public class OnBootReceiver extends BroadcastReceiver {
 
 		mgr.cancel(getPendingIntent(ctxt));
 	}
-
-	private static PendingIntent getPendingIntent(Context ctxt) {
+// getPendingIntent() broadcast to another receiver.
+    private static PendingIntent getPendingIntent(Context ctxt) {
 		Intent i = new Intent(ctxt, OnAlarmReceiver.class);
 		return (PendingIntent.getBroadcast(ctxt, 0, i, 0));
 	}
